@@ -35,4 +35,4 @@ public:
   friend std::ostream& operator<<(std::ostream& output, Transform tr);
 };
 
-#endif // include guard for POINT_H
+#endif

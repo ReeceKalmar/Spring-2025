@@ -25,6 +25,16 @@ Point Transform::operator*(Point pt){
 	return Point(xNew, yNew);
 }
 
+Point& operator*=(Point& pt, Transform tr) {
+    double newX = tr.a * pt.x + tr.b * pt.y + tr.c;
+    double newY = tr.d * pt.x + tr.e * pt.y + tr.f;
+
+    pt.x = newX;
+    pt.y = newY;
+
+    return pt;
+}
+
 std::ostream& operator<<(std::ostream& output, Transform tr) {
     output << "[" << tr.a << ", " << tr.b << ", " << tr.c << ", " << tr.d << ", " << tr.e << ", " << tr.f << "]";
     return output;
