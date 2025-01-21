@@ -21,14 +21,16 @@ const double transformations[4][6] = {{0.0, 0.0, 0.0, 0.0, 0.16, 0.0},
 
 // Function to select a transformation based on probabilities
 int selectTransformation() {
-  int range = std::rand() % 100; // 0-99
-  if (range < probabilities[0])
+  int range = (std::rand() % 100) + 1; // 1-100
+  if (range == 1)
     return 0; // 1%
-  if (range < probabilities[0] + probabilities[1])
+  else if (range <= 8)
     return 1; // 7%
-  if (range < probabilities[0] + probabilities[1] + probabilities[2])
+  else if (range <= 15)
     return 2; // 7%
-  return 3;   // 85%
+  else {
+    return 3; // 85%
+  }
 }
 
 // Applies the transformation to x and y
@@ -48,7 +50,7 @@ void setPixel(double x, double y, unsigned char *image) {
 
   int byteIndex = (pixelY * width + pixelX) / 8;
   int bitOffset = (pixelY * width + pixelX) % 8;
-  image[byteIndex] |= (1 << bitOffset);
+  image[byteIndex] |= (0b10000000 >> bitOffset);
 }
 
 // Performs the iterations to generate the fern
@@ -72,13 +74,13 @@ bool getPixel(int row, int col, unsigned char *image) {
   int bitOffset = (row * width + col) % 8;
 
   // Check if the corresponding bit is set
-  return (image[byteIndex] & (1 << bitOffset)) != 0;
+  return (image[byteIndex] & (0b10000000 >> bitOffset));
 }
 
 // Draws the Barnsley Fern from the image array.
 void drawImage(unsigned char *image) {
-  for (int row = 0; row < height; ++row) {
-    for (int col = 0; col < width; ++col) {
+  for (int row = 0; row < height; row++) {
+    for (int col = 0; col < width; col++) {
       if (getPixel(row, col, image)) {
         std::cout << "#";
       } else {
@@ -97,15 +99,23 @@ int main() {
   std::cin >> iterations;
 
   if (iterations <= 0) {
-    std::cout << "Program Exiting: You entered a negative number: "
-              << iterations << "\n";
+    std::cout
+        << "Program Exiting: You entered a negative number or invalid input";
     return 0;
   }
 
-  unsigned char image[height * width / 8] = {};
+  int size = height * width / 8;
+
+  if ((height * width) % 8 != 0){
+		size++;
+	}
+
+  unsigned char* image = new unsigned char[size]();
 
   performIterations(iterations, image);
   drawImage(image);
+
+	std::cout << (0b10000000 >> 1);
 
   return 0;
 }
