@@ -1,38 +1,42 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
+
 /*
 Transform class for CS 3505 assignment 2.
-An object that holds 6 double's to be used to transform a Point object.
+A transform holds 6 values to transform a 2d Point Vector.
 
 By Reece Kalmar
-01/17/2025
+01/19/2025
 */
-#include <iostream> // for ostream
+
+#include <ostream>
 
 class Point;
 
+// Represents 6 coefficients thats used to transform a 2d Vector Point.
 class Transform {
 private:
+  // Represents the 6 coefficients that will be used as the transform.
   double a, b, c, d, e, f;
 
 public:
-  // This constructor takes initial values for a, b, c, d, e and f.
+  // Constructor that takes and sets the 6 different coefficients.
   Transform(double a, double b, double c, double d, double e, double f);
 
-  // The destructor does nothing because we didn't allocate any new memory
-  ~Transform();
+  // Method that alters the parameter array (should have a size of 6), and sets
+  // the values to that of the transform objects coefficients.
+  void getParameters(double *array);
 
-	// Sets the doubles of array using the Transform object's parameters
-	void getParameters(double* parameters);
-
-  // Operators
+  // * Overload that creates a new 2d vector point with the transformation from
+  // the transform coefficients.
   Point operator*(Point pt);
 
-	// Overload *=
-	friend Point& operator*=(Point& pt, Transform tr);
+  // *= Overload that modifies the original 2d Point vector and transforms it
+  // using the six transform coefficients.
+  friend Point &operator*=(Point &pt, Transform tr);
 
-  // Friend insertion operator to make printing easy
-  friend std::ostream& operator<<(std::ostream& output, Transform tr);
+  // OSStream insertion overload for a 6 coefficients of the transform object.
+  friend std::ostream &operator<<(std::ostream &output, Transform tr);
 };
 
 #endif
