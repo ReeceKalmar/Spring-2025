@@ -20,6 +20,9 @@ private:
   double a, b, c, d, e, f;
 
 public:
+  // Defailt Constructor that initializes the six coefficients to 0.
+  Transform();
+
   // Constructor that takes and sets the 6 different coefficients.
   Transform(double a, double b, double c, double d, double e, double f);
 

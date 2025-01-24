@@ -9,6 +9,9 @@ By Reece Kalmar
 #include "transform.h"
 #include "point.h"
 
+Transform::Transform()
+    : a(0), b(0), c(0), d(0), e(0), f(0) {}
+
 Transform::Transform(double a, double b, double c, double d, double e, double f)
     : a(a), b(b), c(c), d(d), e(e), f(f) {}
 
