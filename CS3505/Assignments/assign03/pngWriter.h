@@ -31,4 +31,7 @@ public:
   void setPixel(unsigned int x, unsigned int y, unsigned char r,
                 unsigned char g, unsigned char b, unsigned char a);
   void saveToFile(char *fileName);
+
+	unsigned int getHeight();
+	unsigned int getWidth();
 };

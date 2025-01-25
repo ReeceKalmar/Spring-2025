@@ -11,8 +11,6 @@
 #include <iostream>
 
 // Global Constants
-const double xMax = 2.75;
-const double yMax = 10.1;
 const int probabilities[4] = {1, 7, 7, 85};
 const double transformations[4][6] = {{0.0, 0.0, 0.0, 0.0, 0.16, 0.0},
                                       {0.2, -0.26, 0.0, 0.23, 0.22, 1.6},
@@ -27,6 +25,10 @@ const Transform transforms[4]{
 };
 
 Point pt{};
+
+int mapToImage(double value, double maxValue, int resolution) {
+  return static_cast<int>((value / maxValue) * resolution);
+}
 
 // Function to select a transformation based on probabilities
 int selectTransformation() {
@@ -48,7 +50,14 @@ void performIterations(int iterations, PNGWriter image) {
   for (int i = 0; i < iterations; i++) {
     int transformIndex = selectTransformation();
     pt *= transformations[transformIndex];
-    image.setPixel(pt.getX(), pt.getY(), 255, 0, 0, 255);
+    // Map the point to image coordinates
+    int x = mapToImage(pt.getX(), 2.75, image.getWidth());
+    int y = mapToImage(pt.getY(), 10.1, image.getHeight());
+
+    // Ensure the point is within bounds before setting the pixel
+    if (x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+      image.setPixel(x, y, 255, 0, 0, 255);
+    }
   }
 }
 
@@ -73,6 +82,14 @@ int main(int argc, char *argv[]) {
     std::cout << "Invalid arguments: width, height, and iterations must be "
                  "positive integers.";
     return 0;
+  }
+  if (width > 1000000 || height > 1000000) {
+    std::cout << "height x width " << height << " x " << width << " iterations "
+              << iterations;
+    std::cerr << "Error: Image dimensions exceed maximum supported size "
+                 "(1,000,000x1,000,000)."
+              << std::endl;
+    return 1;
   }
 
   PNGWriter image{height, width};

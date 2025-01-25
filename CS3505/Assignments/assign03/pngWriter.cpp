@@ -17,6 +17,7 @@ void PNGWriter::initPNG() {
     png_destroy_write_struct(&pngStruct, &pngInfo);
     throw std::runtime_error("Error during PNG initialization");
   }
+  png_set_user_limits(pngStruct, 1000000, 1000000);
 }
 
 PNGWriter::PNGWriter(unsigned int height, unsigned int width)
@@ -31,7 +32,7 @@ PNGWriter::PNGWriter(unsigned int height, unsigned int width)
 
   // We initialize one contigous block of memory and use pointers
   // to the addresses for the 2d array.
-  for (int y = 0; y < height; ++y) {
+  for (unsigned int y = 0; y < height; ++y) {
     imageDatap[y] = rowDatap + y * width * 4;
   }
 }
@@ -76,3 +77,6 @@ void PNGWriter::saveToFile(char *fileName) {
   png_destroy_write_struct(&pngStruct, &pngInfo);
   initPNG();
 }
+
+unsigned int PNGWriter::getHeight() { return height; }
+unsigned int PNGWriter::getWidth() { return width; }
