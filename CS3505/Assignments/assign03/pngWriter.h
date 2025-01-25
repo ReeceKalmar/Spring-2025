@@ -12,15 +12,13 @@ By Reece Kalmar
 
 class PNGWriter {
 private:
-  png_structp pngStruct;
-  png_infop pngInfo;
+  png_structp png;
+  png_infop info;
   png_bytep *imageDatap;
   png_byte *rowDatap;
 
   unsigned int height;
   unsigned int width;
-
-  void initPNG();
 
 public:
   // PNGWriter();
@@ -28,10 +26,9 @@ public:
   PNGWriter(unsigned int height, unsigned int width);
   ~PNGWriter();
   // bool isPng(char *fileName);
-  void setPixel(unsigned int x, unsigned int y, unsigned char r,
-                unsigned char g, unsigned char b, unsigned char a);
+  void setPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b,
+                unsigned char a);
   void saveToFile(char *fileName);
-
-	unsigned int getHeight();
-	unsigned int getWidth();
+  unsigned int getHeight();
+  unsigned int getWidth();
 };
