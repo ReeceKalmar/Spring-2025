@@ -8,29 +8,22 @@
 #include "point.h"
 #include "transform.h"
 #include <cstdlib>
-#include <iostream>
 
-// Global Constants
-const int probabilities[4] = {1, 7, 7, 85};
-const double transformations[4][6] = {{0.0, 0.0, 0.0, 0.0, 0.16, 0.0},
+// Global constants
+const double xMax = 2.75;
+const double yMax = 10.1;
+const Transform transformations[4] = {{0.0, 0.0, 0.0, 0.0, 0.16, 0.0},
                                       {0.2, -0.26, 0.0, 0.23, 0.22, 1.6},
                                       {-0.15, 0.28, 0.0, 0.26, 0.24, 0.44},
                                       {0.85, 0.04, 0.0, -0.04, 0.85, 1.6}};
 
-const Transform transforms[4]{
-    Transform{transformations[0]},
-    Transform{transformations[1]},
-    Transform{transformations[2]},
-    Transform{transformations[3]},
-};
+// Global variables, these are here to simplify the methods, instead of passing
+// them as inputs to parameters.
+int height = 0;
+int width = 0;
 
-Point pt{};
-
-int mapToImage(double value, double maxValue, int resolution) {
-  return static_cast<int>((value / maxValue) * resolution);
-}
-
-// Function to select a transformation based on probabilities
+// Randomly selects an number from 0 - 3 representing which transformation
+// to use from the array of transformations.
 int selectTransformation() {
   int range = (std::rand() % 100) + 1; // 1-100
   if (range == 1)
@@ -45,57 +38,42 @@ int selectTransformation() {
 }
 
 // Performs the iterations to generate the fern
-void performIterations(int iterations, PNGWriter image) {
+void performIterations(int iterations, char *fileName) {
+  Point pt{0, 0};
+  PNGWriter img{static_cast<unsigned int>(height),
+                static_cast<unsigned int>(width)};
 
   for (int i = 0; i < iterations; i++) {
     int transformIndex = selectTransformation();
     pt *= transformations[transformIndex];
-    // Map the point to image coordinates
-    int x = mapToImage(pt.getX(), 2.75, image.getWidth());
-    int y = mapToImage(pt.getY(), 10.1, image.getHeight());
 
-    // Ensure the point is within bounds before setting the pixel
-    if (x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-      image.setPixel(x, y, 255, 0, 0, 255);
-    }
+    int x = pt.getX();
+    int y = pt.getY();
+
+    int pixelX = (int)((double)width / 2 * (1 + x / xMax));
+    int pixelY = (int)((height - 1) * (1 - y / yMax));
+
+    img.setPixel(pixelX, pixelY, 255, 0, 0, 255);
   }
+
+  img.saveToFile(fileName);
 }
 
-// Draws the Barnsley Fern from the image array.
-void drawImage(char *fileName, PNGWriter image) { image.saveToFile(fileName); }
-
-// Asks the user for the number of iterations, and calls helper methods
 int main(int argc, char *argv[]) {
-  if (argc <= 4) {
-    std::cout << "incorrect amount of arguments";
+  if (argc < 5) {
+    std::cerr << "Usage: fernPNG <output_file> <width> <height> <iterations>\n";
+    return -1;
+  }
+
+  width = strtol(argv[2], NULL, 10);
+  height = strtol(argv[3], NULL, 10);
+  int iterations = strtol(argv[4], NULL, 10);
+  if (width <= 0 || height <= 0) {
+    std::cout << "Invalid width and/or height";
     return 0;
   }
 
-  char *fileName = argv[1];
-  // Convert arguments to unsigned int safely
-  unsigned int width = std::strtoul(argv[2], nullptr, 10);      // Base 10
-  unsigned int height = std::strtoul(argv[3], nullptr, 10);     // Base 10
-  unsigned int iterations = std::strtoul(argv[4], nullptr, 10); // Base 10
-
-  // Check for conversion errors (e.g., invalid input)
-  if (width == 0 || height == 0 || iterations == 0) {
-    std::cout << "Invalid arguments: width, height, and iterations must be "
-                 "positive integers.";
-    return 0;
-  }
-  if (width > 1000000 || height > 1000000) {
-    std::cout << "height x width " << height << " x " << width << " iterations "
-              << iterations;
-    std::cerr << "Error: Image dimensions exceed maximum supported size "
-                 "(1,000,000x1,000,000)."
-              << std::endl;
-    return 1;
-  }
-
-  PNGWriter image{height, width};
-
-  performIterations(iterations, image);
-  drawImage(fileName, image);
+  performIterations(iterations, argv[1]);
 
   return 0;
 }

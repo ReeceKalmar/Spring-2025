@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#pragma once
 
 /*
 Transform class for CS 3505 assignment 2.
@@ -26,6 +25,8 @@ public:
   // Constructor that takes and sets the 6 different coefficients.
   Transform(double a, double b, double c, double d, double e, double f);
 
+  // Constructor that takes and sets the
+  // 6 different coefficients from an array parameter.
   Transform(const double coefficients[6]);
 
   // Method that alters the parameter array (should have a size of 6), and sets
@@ -43,5 +44,3 @@ public:
   // OSStream insertion overload for a 6 coefficients of the transform object.
   friend std::ostream &operator<<(std::ostream &output, Transform tr);
 };
-
-#endif

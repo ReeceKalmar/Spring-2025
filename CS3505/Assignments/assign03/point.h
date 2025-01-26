@@ -1,5 +1,4 @@
-#ifndef POINT_H
-#define POINT_H
+#pragma once
 
 /*
 Point class for CS 3505 assignment 2.
@@ -8,7 +7,7 @@ A Point holds x and y values.
 By Eric Heisler and Reece Kalmar
 01/19/2025
 */
-#include <iostream> // for ostream overload
+#include <iostream>
 
 class Transform;
 
@@ -44,5 +43,3 @@ public:
   // using the six transform coefficients.
   friend Point &operator*=(Point &pt, Transform tr);
 };
-
-#endif
