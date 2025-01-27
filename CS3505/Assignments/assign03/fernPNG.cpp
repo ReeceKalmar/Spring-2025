@@ -1,79 +1,65 @@
-/*
- * Author: Reece Kalmar
- * Date: 01/24/2025
- * This program takes a integer input and draws a Barnsley Fern onto a png.
- */
-
 #include "pngWriter.h"
 #include "point.h"
 #include "transform.h"
-#include <cstdlib>
+#include <iostream>
+#include <random>
+#include <vector>
 
-// Global constants
-const double xMax = 2.75;
-const double yMax = 10.1;
-const Transform transformations[4] = {{0.0, 0.0, 0.0, 0.0, 0.16, 0.0},
-                                      {0.2, -0.26, 0.0, 0.23, 0.22, 1.6},
-                                      {-0.15, 0.28, 0.0, 0.26, 0.24, 0.44},
-                                      {0.85, 0.04, 0.0, -0.04, 0.85, 1.6}};
+// Define Barnsley fern transformations
+const std::vector<Transform> transforms = {
+    Transform(0.0, 0.0, 0.0, 0.0, 0.16, 0.0),
+    Transform(0.85, 0.04, 0.0, -0.04, 0.85, 1.6),
+    Transform(0.2, -0.26, 0.0, 0.23, 0.22, 1.6),
+    Transform(-0.15, 0.28, 0.0, 0.26, 0.24, 0.44)};
 
-// Global variables, these are here to simplify the methods, instead of passing
-// them as inputs to parameters.
-int height = 0;
-int width = 0;
-
-// Randomly selects an number from 0 - 3 representing which transformation
-// to use from the array of transformations.
-int selectTransformation() {
-  int range = (std::rand() % 100) + 1; // 1-100
-  if (range == 1)
-    return 0; // 1%
-  else if (range <= 8)
-    return 1; // 7%
-  else if (range <= 15)
-    return 2; // 7%
-  else {
-    return 3; // 85%
-  }
-}
-
-// Performs the iterations to generate the fern
-void performIterations(int iterations, char *fileName) {
-  Point pt{0, 0};
-  PNGWriter img{static_cast<unsigned int>(height),
-                static_cast<unsigned int>(width)};
-
-  for (int i = 0; i < iterations; i++) {
-    int transformIndex = selectTransformation();
-    pt *= transformations[transformIndex];
-
-    int x = pt.getX();
-    int y = pt.getY();
-
-    int pixelX = (int)((double)width / 2 * (1 + x / xMax));
-    int pixelY = (int)((height - 1) * (1 - y / yMax));
-
-    img.setPixel(pixelX, pixelY, 255, 0, 0, 255);
-  }
-
-  img.saveToFile(fileName);
-}
+// Corresponding probabilities
+const std::vector<int> probabilities = {1, 86, 93, 100};
 
 int main(int argc, char *argv[]) {
-  if (argc < 5) {
-    std::cerr << "Usage: fernPNG <output_file> <width> <height> <iterations>\n";
-    return -1;
+  if (argc != 5) {
+    std::cerr
+        << "Usage: ./fernPNG <output_file> <width> <height> <iterations>\n";
+    return 1;
   }
 
-  width = strtol(argv[2], NULL, 10);
-  height = strtol(argv[3], NULL, 10);
-  int iterations = strtol(argv[4], NULL, 10);
-  if (width <= 0 || height <= 0) {
-    std::cout << "Invalid width and/or height";
-    return 0;
+  // Parse command-line arguments
+  const char *outputFile = argv[1];
+  unsigned int width = std::stoi(argv[2]);
+  unsigned int height = std::stoi(argv[3]);
+  unsigned int iterations = std::stoi(argv[4]);
+
+  // Initialize PNGWriter and starting point
+  PNGWriter png(height, width);
+  Point pt(0.0, 0.0);
+
+  // Iteratively apply transformations and set pixels
+  for (unsigned int i = 0; i < iterations; ++i) {
+    // Simpler RNG for selecting transformations
+    int randomValue = rand() % 100 + 1;
+    int choice = 0;
+    for (size_t j = 0; j < probabilities.size(); ++j) {
+      if (randomValue <= probabilities[j]) {
+        choice = j;
+        break;
+      }
+    }
+
+    pt *= transforms[choice];
+
+    // Map point to image coordinates
+    int x = static_cast<int>((pt.getX() + 2.5) / 5.0 * width);
+    int y = static_cast<int>((10 - pt.getY()) / 10.0 * height);
+
+    // Set pixel if within bounds
+    if (x >= 0 && x < static_cast<int>(width) && y >= 0 &&
+        y < static_cast<int>(height)) {
+      png.setPixel(x, y, 0, 255, 0, 255);
+    }
   }
 
-  performIterations(iterations, argv[1]);
+  // Save the PNG image
+  png.saveToFile(const_cast<char *>(outputFile));
 
+  std::cout << "Barnsley fern image saved to " << outputFile << "\n";
   return 0;
 }
