@@ -16,6 +16,8 @@ Transform::Transform(const double coefficients[6])
     : a(coefficients[0]), b(coefficients[1]), c(coefficients[2]),
       d(coefficients[3]), e(coefficients[4]), f(coefficients[5]) {}
 
+Transform::~Transform() {};
+
 void Transform::getParameters(double array[6]) {
   array[0] = a;
   array[1] = b;

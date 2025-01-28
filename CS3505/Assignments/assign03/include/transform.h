@@ -28,6 +28,9 @@ public:
   // 6 different coefficients from an const double array parameter.
   Transform(const double coefficients[6]);
 
+  // The destructor does nothing because we didn't allocate any new memory
+  ~Transform();
+
   // Method that alters the parameter array (should have a size of 6), and sets
   // the values to that of the transform objects coefficients.
   void getParameters(double array[6]);

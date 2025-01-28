@@ -20,6 +20,8 @@ const std::vector<Transform> transforms = {
 
 // Corresponding probabilities of (1%, 85%, 7%, 7%)
 const std::vector<int> probabilities = {1, 86, 93, 100};
+const double xMax = 2.75;
+const double yMax = 10.1;
 
 int main(int argc, char *argv[]) {
   if (argc != 5) {
@@ -59,8 +61,8 @@ int main(int argc, char *argv[]) {
     pt *= transforms[choice];
 
     // Map point to image coordinates
-    int x = static_cast<int>((pt.getX() + 2.5) / 5.0 * width);
-    int y = static_cast<int>((10 - pt.getY()) / 10.0 * height);
+    int x = static_cast<int>((((double)width) / 2 * (1 + pt.getX() / xMax)));
+    int y = static_cast<int>((height * (1 - pt.getY() / yMax)));
 
     // Set pixel if within bounds
     if (x >= 0 && x < static_cast<int>(width) && y >= 0 &&
