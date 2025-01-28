@@ -35,7 +35,7 @@ void PNGWriter::setPixel(int x, int y, unsigned char r, unsigned char g,
   // Since currently the bitdepth is 8, meaning one byte per color value (R, G,
   // B, A), and since we use 4 bytes per pixel, one for RGB and another for the
   // alpha value. Theres a total of (width * (8/8) * 4) indices per row.
-  int offset = x * 4;
+  const int offset = (x * 4);
 
   imageDatap[y][offset + 0] = r;
   imageDatap[y][offset + 1] = g;

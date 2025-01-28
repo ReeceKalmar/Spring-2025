@@ -1,0 +1,32 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wall",
+      "-I./libpng-1.6.45",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/fernPNG.o",
+      "src/fernPNG.cpp"
+    ],
+    "directory": "/home/reece311/notes/Spring-2025/CS3505/Assignments/assign03",
+    "file": "/home/reece311/notes/Spring-2025/CS3505/Assignments/assign03/src/fernPNG.cpp",
+    "output": "/home/reece311/notes/Spring-2025/CS3505/Assignments/assign03/build/fernPNG.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wall",
+      "-I./libpng-1.6.45",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/pngWriter.o",
+      "src/pngWriter.cpp"
+    ],
+    "directory": "/home/reece311/notes/Spring-2025/CS3505/Assignments/assign03",
+    "file": "/home/reece311/notes/Spring-2025/CS3505/Assignments/assign03/src/pngWriter.cpp",
+    "output": "/home/reece311/notes/Spring-2025/CS3505/Assignments/assign03/build/pngWriter.o"
+  }
+]
