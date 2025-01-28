@@ -4,7 +4,7 @@ PNGWriter holds a png and methods to manipulate and save
 the png to a specified file.
 
 By Reece Kalmar
-01/19/2025
+01/29/2025
 */
 
 #include "pngWriter.h"
@@ -23,7 +23,7 @@ PNGWriter::PNGWriter(unsigned int height, unsigned int width)
   // We initialize one contigous block of memory and use pointers
   // to the addresses for the 2d array.
   // This is more efficient than allocating memory for each column.
-  for (unsigned int y = 0; y < height; ++y) {
+  for (unsigned int y = 0; y < height; y++) {
     imageDatap[y] = rowDatap + (y * width * 4);
   }
 }

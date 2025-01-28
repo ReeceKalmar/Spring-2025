@@ -27,9 +27,9 @@ private:
   unsigned int width;
 
 public:
-  // This constructor takes an unsigned height and width integer, produces a PNG
-  // with (0, 0, 0, 0) for each RGBA pixel.
-  PNGWriter(unsigned int height, unsigned int width);
+  // This constructor takes an unsigned height and width integer, or defaults to
+  // 1000x1000. Produces a PNG with (0, 0, 0, 0) for each RGBA pixel.
+  PNGWriter(unsigned int height = 1000, unsigned int width = 1000);
 
   // Destructor that deletes the dynamically allocated
   // imageDatap and rowDatap variables.
