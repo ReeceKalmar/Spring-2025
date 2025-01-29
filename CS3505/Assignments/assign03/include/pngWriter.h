@@ -8,7 +8,6 @@ By Reece Kalmar
 01/24/2025
 */
 
-#include <memory>
 #include <png.h>
 
 // This object represents a png, and has
@@ -18,12 +17,12 @@ private:
   // This is a 2d byte array which stores the PNG's row data.
   // Uses smart pointer for better memory management on cases where an exception
   // is thrown.
-  std::unique_ptr<png_bytep[]> imageDatap;
+  png_bytep *imageDatap;
 
   // This is a byte array used to initialize imageDatap.
   // Uses smart pointer for better memory management on cases where an exception
   // is thrown.
-  std::unique_ptr<png_byte[]> rowDatap;
+  png_byte *rowDatap;
 
   // The height of the PNG, as a unsigned int.
   unsigned int height;
