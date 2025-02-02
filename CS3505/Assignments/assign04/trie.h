@@ -8,16 +8,21 @@ private:
 
   Trie *children[26];
 
-  bool isValidChar(char chr);
+  bool isValidChar(char chr) const;
 
-  void allWords(Trie temp, std::string word, std::vector<std::string> &words);
+  void allWords(const std::string &word, std::vector<std::string> &words) const;
+
+  void addWord(const std::string &word, size_t pos);
+
+  bool isWord(const std::string &word, size_t pos) const;
 
 public:
   Trie();
   Trie(const Trie &other);
   ~Trie();
   Trie &operator=(Trie other);
-  void addWord(std::string word);
-  bool isWord(std::string word);
-  std::vector<std::string> allWordsStartingWithPrefix(std::string prefix);
+  void addWord(const std::string &word);
+  bool isWord(const std::string &word) const;
+  std::vector<std::string>
+  allWordsStartingWithPrefix(const std::string &prefix) const;
 };
