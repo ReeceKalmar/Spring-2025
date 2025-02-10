@@ -1,7 +1,15 @@
+/*
+implementation of trie data structure for assign04.
+
+By Reece Kalmar
+02/07/2025
+*/
+
 #include "trie.h"
 #include <cstddef>
+#include <utility>
 
-Trie::Trie() : children{}, isEnd(false) {}
+Trie::Trie() : isEnd(false), children{} {}
 
 Trie::Trie(const Trie &other) : isEnd(other.isEnd) {
   for (size_t i = 0; i < 26; i++) {
@@ -16,13 +24,13 @@ Trie::Trie(const Trie &other) : isEnd(other.isEnd) {
 Trie::~Trie() {
   for (size_t i = 0; i < 26; i++) {
     delete children[i];
+    children[i] = nullptr;
   }
 }
 
 Trie &Trie::operator=(Trie other) {
-  std::swap(children, other.children);
   std::swap(isEnd, other.isEnd);
-
+  std::swap(children, other.children);
   return *this;
 }
 
@@ -51,17 +59,18 @@ void Trie::addWord(const std::string &word) {
 
   addWord(word, 0);
 }
-
 bool Trie::isWord(const std::string &word, size_t pos) const {
   if (pos == word.size()) {
     return isEnd;
   }
 
-  if (isValidChar(word[pos])) {
-    int index = word[pos] - 'a';
-    if (children[index]) {
-      return children[index]->isWord(word, pos + 1);
-    }
+  if (!isValidChar(word[pos])) {
+    return false; // Ensure invalid characters return false immediately
+  }
+
+  int index = word[pos] - 'a';
+  if (children[index]) {
+    return children[index]->isWord(word, pos + 1);
   }
 
   return false;
@@ -92,8 +101,12 @@ Trie::allWordsStartingWithPrefix(const std::string &prefix) const {
   std::vector<std::string> words;
 
   for (char chr : prefix) {
+    if (!isValidChar(chr)) {
+      return words; // Return empty vector if invalid character is found
+    }
+
     int index = chr - 'a';
-    if (!isValidChar(chr) || !temp->children[index]) {
+    if (!temp->children[index]) {
       return words;
     }
     temp = temp->children[index];
